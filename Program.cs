@@ -5,7 +5,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(); // ثبت سرویس سواگر
+builder.Services.AddSwaggerGen(); 
 
 builder.Services.AddDbContext<ApplicationDBContext>(options => {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
@@ -15,11 +15,11 @@ var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();   // تولید فایل JSON
-    app.UseSwaggerUI(); // ساخت UI گرافیکی
+    app.UseSwagger();   
+    app.UseSwaggerUI(); 
 }
 
-// app.UseHttpsRedirection(); // کامنت بماند
+// app.UseHttpsRedirection(); 
 
 app.MapControllers();
 app.Run();
