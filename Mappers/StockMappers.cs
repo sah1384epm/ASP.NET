@@ -1,6 +1,5 @@
 using API.Dtos.Stock;
 using API.Models;
-using API.Dtos.Stock;
 namespace API.Mappers
 {
     public static class StockMappers
