@@ -10,12 +10,12 @@ namespace API.Controllers
     public class CommentController : ControllerBase
     {
         private readonly ICommentRepository _commentRepo;
-        private readonly IStockRepository _stockRepo; // تزریق فیلد StockRepo
+        private readonly IStockRepository _stockRepo; 
 
         public CommentController(ICommentRepository commentRepo, IStockRepository stockRepo)
         {
             _commentRepo = commentRepo;
-            _stockRepo = stockRepo; // مقداردهی StockRepo
+            _stockRepo = stockRepo; 
         }
 
         [HttpGet]
@@ -55,5 +55,18 @@ namespace API.Controllers
 
             return CreatedAtAction(nameof(GetById), new { id = commentModel.Id }, commentModel.ToCommentDto());
         }
+        [HttpDelete]
+        [Route("{id}")]
+         public async Task<IActionResult> Delete([FromRoute] int id)
+    {
+          var commentModel = await _commentRepo.DeleteAsync(id);
+
+                 if (commentModel == null)
+                  {
+                     return NotFound("Comment does not exist");
+                  }
+
+    return Ok(commentModel);
+}
     }
 }
