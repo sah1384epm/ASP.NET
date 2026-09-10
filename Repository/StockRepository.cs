@@ -1,3 +1,7 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using API.Data;
 using API.Dtos.Stock;
 using API.Helpers;
@@ -28,6 +32,16 @@ namespace API.Repository
             if (!string.IsNullOrWhiteSpace(query.Symbol))
             {
                 stocks = stocks.Where(s => s.Symbol.Contains(query.Symbol));
+            }
+
+            if (!string.IsNullOrWhiteSpace(query.SortBy))
+            {
+                if (query.SortBy.Equals("Symbol", StringComparison.OrdinalIgnoreCase))
+                {
+                    stocks = query.IsDecending 
+                        ? stocks.OrderByDescending(s => s.Symbol) 
+                        : stocks.OrderBy(s => s.Symbol);
+                }
             }
 
             return await stocks.ToListAsync();
