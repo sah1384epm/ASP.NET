@@ -17,8 +17,8 @@ namespace API.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "2ef06410-8e41-41f9-8d8f-de50dfccfa75", "b1da185f-52ca-4d0b-9aab-f223df315581", "User", "USER" },
-                    { "7f4cebc3-60db-461b-b656-dcacd977048d", "443a3d86-a09e-4f8a-8f8d-968136888fdb", "Admin", "ADMIN" }
+                    { "4542dc03-d3c4-4e3a-bd31-0241976947ae", "041bbfd6-14fe-47f0-970c-fdbe1049be40", "Admin", "ADMIN" },
+                    { "62068eef-20f9-448e-82f5-7327abbbc3ac", "488c47e6-34ae-4d9d-92e7-6373ea7297e5", "User", "USER" }
                 });
         }
 
@@ -28,12 +28,12 @@ namespace API.Migrations
             migrationBuilder.DeleteData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
-                keyValue: "2ef06410-8e41-41f9-8d8f-de50dfccfa75");
+                keyValue: "4542dc03-d3c4-4e3a-bd31-0241976947ae");
 
             migrationBuilder.DeleteData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
-                keyValue: "7f4cebc3-60db-461b-b656-dcacd977048d");
+                keyValue: "62068eef-20f9-448e-82f5-7327abbbc3ac");
         }
     }
 }
