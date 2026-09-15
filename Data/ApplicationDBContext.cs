@@ -37,13 +37,17 @@ public class ApplicationDBContext : IdentityDbContext<AppUser>
         {
             new IdentityRole
             {
+                Id = "d3b2f3e5-5d3d-4e3b-9f3d-3b3d3b3d3b01",
                 Name = "Admin",
-                NormalizedName = "ADMIN"
+                NormalizedName = "ADMIN",
+                ConcurrencyStamp = "a1b2c3d4-e5f6-7890-1234-567890abcdef" // اضافه شد
             },
             new IdentityRole
             {
+                Id = "d3b2f3e5-5d3d-4e3b-9f3d-3b3d3b3d3b02",
                 Name = "User",
-                NormalizedName = "USER"
+                NormalizedName = "USER",
+                ConcurrencyStamp = "b1c2d3e4-f5a6-7890-1234-567890abcdef" // اضافه شد
             },
         };
 
