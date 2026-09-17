@@ -8,7 +8,7 @@ namespace API.Models
         public string AppUserId { get; set; } = string.Empty;
         public int StockId { get; set; }
 
-        // Navigation Properties (علامت ? اضافه شد)
+       
         public AppUser? AppUser { get; set; }
         public Stock? Stock { get; set; }
     }

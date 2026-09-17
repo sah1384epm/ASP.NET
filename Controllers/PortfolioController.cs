@@ -9,6 +9,7 @@ namespace API.Controllers;
 
 [Route("api/portfolio")]
 [ApiController]
+[Authorize]
 public class PortfolioController : ControllerBase
 {
     private readonly UserManager<AppUser> _userManager;

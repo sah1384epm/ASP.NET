@@ -22,7 +22,7 @@ public class BearerSecuritySchemeTransformer : IOpenApiDocumentTransformer
         document.Security ??= new List<OpenApiSecurityRequirement>();
         document.Security.Add(new OpenApiSecurityRequirement
         {
-            // اینجا تغییر کرد:
+           
             [new OpenApiSecuritySchemeReference("Bearer")] = new List<string>()
         });
 
