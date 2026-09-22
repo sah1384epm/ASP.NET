@@ -2,6 +2,7 @@ using System.Runtime.CompilerServices;
 using API.Dtos.Stock;
 using API.Helpers;
 using API.Interfaces;
+using System.Linq;
 using API.Mappers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -20,11 +21,12 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        
         public async Task<IActionResult> GetAll([FromQuery] QueryObject query)
         {
             var stocks = await _stockRepo.GetAllAsync(query);
-            var stockDtos = stocks.Select(s => s.ToStockDto());
+            
+            // تغییر اینجا: پرانتز ToList بیرون از Select قرار گرفت
+            var stockDtos = stocks.Select(s => s.ToStockDto()).ToList();
 
             return Ok(stockDtos);
         }
