@@ -15,19 +15,21 @@ public class PortfolioController : ControllerBase
     private readonly UserManager<AppUser> _userManager;
     private readonly IStockRepository _stockRepo;
     private readonly IPortfolioRepository _portfolioRepo;
+    private readonly IFMPService _fmpService; 
 
     public PortfolioController(
         UserManager<AppUser> userManager,
         IStockRepository stockRepo,
-        IPortfolioRepository portfolioRepo)
+        IPortfolioRepository portfolioRepo,
+        IFMPService fmpService) 
     {
         _userManager = userManager;
         _stockRepo = stockRepo;
         _portfolioRepo = portfolioRepo;
+        _fmpService = fmpService;
     }
 
     [HttpGet]
-    
     public async Task<IActionResult> GetUserPortfolio()
     {
         var username = User.GetUsername();
@@ -44,8 +46,8 @@ public class PortfolioController : ControllerBase
 
         return Ok(userPortfolio);
     }
+
     [HttpPost("{symbol}")]
-    
     public async Task<IActionResult> AddPortfolio(string symbol)
     {
         var username = User.GetUsername();
@@ -53,14 +55,28 @@ public class PortfolioController : ControllerBase
         {
             return Unauthorized("user not found");
         }
+        
         var appUser = await _userManager.FindByNameAsync(username);
-        var stock = await _stockRepo.GetBySymbolAsync(symbol);
-
-        if (stock == null) return BadRequest("Stock not found");
         if (appUser == null)
         {
             return Unauthorized("user not found");
         }
+
+        var stock = await _stockRepo.GetBySymbolAsync(symbol);
+
+        if (stock == null)
+        {
+            stock = await _fmpService.FindStockBySymbolAsync(symbol);
+            if (stock == null)
+            {
+                return BadRequest("Stock does not exist");
+            }
+            else
+            {
+                await _stockRepo.CreateAsync(stock);
+            }
+        }
+
         var userPortfolio = await _portfolioRepo.GetUserPortfolio(appUser);
 
         if (userPortfolio.Any(e => e.Symbol.ToLower() == symbol.ToLower()))
@@ -83,35 +99,36 @@ public class PortfolioController : ControllerBase
             return Created();
         }
     }
+
     [HttpDelete("{symbol}")]
     [Authorize]
-public async Task<IActionResult> DeletePortfolio(string symbol)
-{
-    var username = User.GetUsername();
-    if (string.IsNullOrEmpty(username))
+    public async Task<IActionResult> DeletePortfolio(string symbol)
+    {
+        var username = User.GetUsername();
+        if (string.IsNullOrEmpty(username))
         {
             return Unauthorized("user not found");
         }
-    var appUser = await _userManager.FindByNameAsync(username);
-    if (appUser == null)
+        
+        var appUser = await _userManager.FindByNameAsync(username);
+        if (appUser == null)
         {
             return Unauthorized("user not found");
         }
 
-    var userPortfolio = await _portfolioRepo.GetUserPortfolio(appUser);
-    
+        var userPortfolio = await _portfolioRepo.GetUserPortfolio(appUser);
 
-    var filteredStock = userPortfolio.Where(s => s.Symbol.ToLower() == symbol.ToLower()).ToList();
+        var filteredStock = userPortfolio.Where(s => s.Symbol.ToLower() == symbol.ToLower()).ToList();
 
-    if (filteredStock.Count == 1)
-    {
-        await _portfolioRepo.DeletePortfolio(appUser, symbol);
+        if (filteredStock.Count == 1)
+        {
+            await _portfolioRepo.DeletePortfolio(appUser, symbol);
+        }
+        else
+        {
+            return BadRequest("Stock not in your portfolio");
+        }
+
+        return Ok();
     }
-    else
-    {
-        return BadRequest("Stock not in your portfolio");
-    }
-
-    return Ok();
-}
 }
