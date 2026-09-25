@@ -5,7 +5,8 @@ using API.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using API.Extensions;
-
+using API.Helpers;                     
+using Microsoft.AspNetCore.Authorization; 
 namespace API.Controllers
 {
     [Route("api/comment")]
@@ -29,17 +30,25 @@ namespace API.Controllers
             _fmpService = fmpService;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAll()
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            [HttpGet("{symbol:alpha}")]
+            [HttpGet]
+            [Authorize]
+           public async Task<IActionResult> GetAll([FromRoute] string? symbol, [FromQuery] CommentQueryObject queryObject)
+          {
+              if (!ModelState.IsValid)
+                 return BadRequest(ModelState);
 
-            var comments = await _commentRepo.GetAllAsync();
-            var commentDtos = comments.Select(c => c.ToCommentDto());
+                if (!string.IsNullOrWhiteSpace(symbol))
+                {
+                    queryObject.Symbol = symbol;
+                }
 
-            return Ok(commentDtos);
-        }
+                var comments = await _commentRepo.GetAllAsync(queryObject);
+
+          var commentDto = comments.Select(s => s.ToCommentDto());
+
+         return Ok(commentDto);
+            }
 
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetById([FromRoute] int id)
